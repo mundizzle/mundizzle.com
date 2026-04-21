@@ -10,7 +10,7 @@ Oakland, CA<br>
 
 ## Summary
 
-Front-end technologist with 25+ years building products, portals, and design systems across startups and enterprise. Brings hands-on engineering depth, architectural judgment, and cross-functional leadership to complex initiatives spanning product delivery, modernization, and team growth.
+Front-end technologist with 25+ years building products, portals, and design systems across startups and enterprise. Known for turning complex product and platform work into durable front-end systems teams can ship and scale with.
 
 ---
 
@@ -18,9 +18,9 @@ Front-end technologist with 25+ years building products, portals, and design sys
 
 **Languages:** HTML, CSS, JavaScript, TypeScript
 
-**Technologies:** React, Next.js, Node.js, Tailwind, Storybook, Vite
+**Technologies:** React, Tailwind, Storybook, Vite, Next.js, Node.js
 
-**Practice:** accessiblity, performance, design systems, framework & library selection, technical leadership, cross-functional collaboration, hiring and mentoring, technical scoping, pre-sales support
+**Practice:** accessiblity, performance, responsive design, design systems, framework & library selection, technical leadership, cross-functional collaboration, hiring and mentoring, technical scoping, pre-sales support
 
 **Agentic Development:** Claude Code, Codex, skills, mcp, workflow design
 

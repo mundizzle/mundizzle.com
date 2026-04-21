@@ -790,7 +790,7 @@ async function main() {
     skillsTitle: skillsSection.title,
     experienceTitle: experienceSection.title,
     educationTitle: educationSection.title,
-    recommendationsTitle: "Recommendations",
+    recommendationsTitle: "Endorsements",
     summary: parseSummary(summarySection),
     skills: parseSkills(skillsSection),
     jobs: parseExperience(experienceSection),
