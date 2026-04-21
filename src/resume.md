@@ -10,7 +10,7 @@ Oakland, CA<br>
 
 ## Summary
 
-Front-end technologist with 25+ years building products, portals, and design systems across startups and enterprise. Known for turning complex product and platform work into durable front-end systems teams can ship and scale with.
+Front-end technology leader with 25+ years building products, portals, and design systems across startups and enterprise. Known for turning complex product and platform work into durable front-end systems teams can ship and scale with.
 
 ---
 

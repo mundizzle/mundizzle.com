@@ -13,17 +13,6 @@
   {
     "source": "linkedin-recommendation",
     "sourceUrl": "https://www.linkedin.com/in/mundi/details/recommendations/",
-    "author": "Nick Cooley",
-    "authorTitle": "Senior Technical Architect",
-    "company": "Salesforce",
-    "relationship": "worked with mundi on the same team",
-    "date": "2018-12-06",
-    "context": null,
-    "quote": "Mundi is the Best.Front-End.Developer.Ever. He knows his craft, brings everyone along for the ride, and I would work with him again in a heartbeat."
-  },
-  {
-    "source": "linkedin-recommendation",
-    "sourceUrl": "https://www.linkedin.com/in/mundi/details/recommendations/",
     "author": "Nathan Logan",
     "authorTitle": "Engineering Manager",
     "company": "Bluebeam Inc.",
@@ -53,17 +42,6 @@
     "date": "2026-04",
     "context": null,
     "quote": "This is the person you want on your team. He possesses immense talent and a fantastic personality, and any company would be lucky to bring him in."
-  },
-  {
-    "source": "linkedin-repost-commentary",
-    "sourceUrl": "https://www.linkedin.com/feed/update/urn:li:activity:7449546407583125504/",
-    "author": "Joseph Kanakaraj",
-    "authorTitle": "Staff Software Engineer",
-    "company": "Eargo",
-    "relationship": null,
-    "date": "2026-04",
-    "context": null,
-    "quote": "Mundi is one of the best engineers I've ever worked with: a great leader, a great contributor, and an even better person."
   },
   {
     "source": "linkedin-repost-commentary",
