@@ -12,6 +12,7 @@ const srcDir = path.join(rootDir, "src");
 const distDir = path.join(rootDir, "dist");
 
 const RESUME_PATH = path.join(srcDir, "resume.md");
+const RECOMMENDATIONS_PATH = path.join(srcDir, "recommendations.json");
 const RESUME_CSS_PATH = path.join(srcDir, "resume.css");
 const TEMPLATE_PATH = path.join(srcDir, "template.html");
 const INDEX_PATH = path.join(distDir, "index.html");
@@ -43,6 +44,31 @@ function escapeHtml(value) {
 
 function renderInline(markdown) {
   return marked.parseInline(markdown.trim());
+}
+
+function formatDisplayDate(value) {
+  if (!value) {
+    return null;
+  }
+
+  if (/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+    const date = new Date(`${value}T00:00:00`);
+    return new Intl.DateTimeFormat("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    }).format(date);
+  }
+
+  if (/^\d{4}-\d{2}$/.test(value)) {
+    const [year, month] = value.split("-").map(Number);
+    return new Intl.DateTimeFormat("en-US", {
+      month: "short",
+      year: "numeric",
+    }).format(new Date(year, month - 1, 1));
+  }
+
+  return value;
 }
 
 function isBlank(line) {
@@ -187,7 +213,7 @@ function parseSections(cursor) {
       fail(`duplicate section '${title}'`, heading.line);
     }
 
-    sections.set(title, { line: heading.line, block });
+    sections.set(title, { title, line: heading.line, block });
   }
 
   return sections;
@@ -205,7 +231,7 @@ function parseSummary(section) {
 function parseSkills(section) {
   const paragraphs = splitParagraphs(section.block);
   if (paragraphs.length === 0) {
-    fail("Core Skills must contain at least one skill row", section.line);
+    fail("Skills must contain at least one skill row", section.line);
   }
 
   const rows = new Map();
@@ -215,7 +241,7 @@ function parseSkills(section) {
     const match = text.match(/^\*\*(.+?):\*\*\s+(.+)$/);
 
     if (!match) {
-      fail("Core Skills rows must use '**Label:** value' format", paragraph[0].line);
+      fail("Skills rows must use '**Label:** value' format", paragraph[0].line);
     }
 
     const sourceLabel = match[1].trim();
@@ -437,6 +463,81 @@ function parseEducation(section) {
   };
 }
 
+function parseRecommendations(raw) {
+  let parsed;
+
+  try {
+    parsed = JSON.parse(raw);
+  } catch (error) {
+    throw new Error(`recommendations.json is not valid JSON: ${error.message}`);
+  }
+
+  if (!Array.isArray(parsed)) {
+    throw new Error("recommendations.json must contain an array of recommendation objects");
+  }
+
+  const recommendations = parsed.map((entry, index) => {
+    if (!entry || typeof entry !== "object" || Array.isArray(entry)) {
+      throw new Error(`recommendations.json entry ${index + 1} must be an object`);
+    }
+
+    if (typeof entry.author !== "string" || entry.author.trim() === "") {
+      throw new Error(`recommendations.json entry ${index + 1} is missing a valid 'author'`);
+    }
+
+    if (typeof entry.quote !== "string" || entry.quote.trim() === "") {
+      throw new Error(`recommendations.json entry ${index + 1} is missing a valid 'quote'`);
+    }
+
+    const optionalFields = [
+      "source",
+      "sourceUrl",
+      "authorTitle",
+      "company",
+      "relationship",
+      "date",
+      "context",
+    ];
+
+    for (const field of optionalFields) {
+      if (!(field in entry) || entry[field] == null) {
+        continue;
+      }
+
+      if (typeof entry[field] !== "string") {
+        throw new Error(`recommendations.json entry ${index + 1} field '${field}' must be a string or null`);
+      }
+    }
+
+    return {
+      source: entry.source?.trim() || null,
+      sourceUrl: entry.sourceUrl?.trim() || null,
+      author: entry.author.trim(),
+      authorTitle: entry.authorTitle?.trim() || null,
+      company: entry.company?.trim() || null,
+      relationship: entry.relationship?.trim() || null,
+      date: entry.date?.trim() || null,
+      context: entry.context?.trim() || null,
+      quote: entry.quote.trim(),
+      displayDate: formatDisplayDate(entry.date?.trim() || null),
+      sortIndex: index,
+    };
+  });
+
+  recommendations.sort((left, right) => {
+    const leftDate = left.date ?? "";
+    const rightDate = right.date ?? "";
+
+    if (leftDate !== rightDate) {
+      return rightDate.localeCompare(leftDate);
+    }
+
+    return left.sortIndex - right.sortIndex;
+  });
+
+  return recommendations;
+}
+
 function renderMeta(contact) {
   return contact
     .map((entry) => `        <a href="${escapeHtml(entry.href)}">${escapeHtml(entry.text)}</a>`)
@@ -491,7 +592,7 @@ function renderJobs(jobs) {
         "    <article class=\"job\">",
         ...metaLines,
         "      <div class=\"job-body\">",
-        `        <h3>${escapeHtml(job.title)} <span class="at">//</span> <span class="co">${escapeHtml(job.company)}</span></h3>`,
+        `        <h3>${escapeHtml(job.title)} <span class="at">//</span> <span class="co">${renderInline(job.company)}</span></h3>`,
         `        <p class="context">${escapeHtml(job.context)}</p>`,
         bulletHtml,
         signatureHtml,
@@ -545,16 +646,79 @@ function renderEducation(education) {
   ].join("\n");
 }
 
+function renderRecommendations(recommendations) {
+  if (recommendations.length === 0) {
+    return [
+      "    <div class=\"recommendations\">",
+      "      <div></div>",
+      "      <p class=\"recommendations-empty\">Recommendations available upon request.</p>",
+      "    </div>",
+    ].join("\n");
+  }
+
+  const items = recommendations
+    .map((recommendation) => {
+      const name = recommendation.sourceUrl
+        ? `<a href="${escapeHtml(recommendation.sourceUrl)}">${escapeHtml(recommendation.author)}</a>`
+        : escapeHtml(recommendation.author);
+
+      const metaParts = [];
+      if (recommendation.authorTitle) {
+        metaParts.push(escapeHtml(recommendation.authorTitle));
+      }
+      if (recommendation.company) {
+        metaParts.push(`<span class="at">//</span> <span class="co">${escapeHtml(recommendation.company)}</span>`);
+      }
+
+      const meta = metaParts.join(" ");
+
+      const paragraphs = recommendation.quote
+        .split(/\n\s*\n/)
+        .map((paragraph) => paragraph.trim())
+        .filter(Boolean)
+        .map((paragraph) => `          <p>${escapeHtml(paragraph)}</p>`)
+        .join("\n");
+
+      return [
+        "        <li>",
+        `          <div class="recommendation-name">${name}</div>`,
+        meta ? `          <div class="recommendation-meta">${meta}</div>` : "",
+        "          <blockquote>",
+        paragraphs,
+        "          </blockquote>",
+        "        </li>",
+      ]
+        .filter(Boolean)
+        .join("\n");
+    })
+    .join("\n");
+
+  return [
+    "    <div class=\"recommendations\">",
+    "      <div></div>",
+    "      <ul class=\"recommendation-list\">",
+    items,
+    "      </ul>",
+    "    </div>",
+  ].join("\n");
+}
+
 function buildHtml(template, data) {
   const replacements = new Map([
     ["{{CV_VERSION}}", data.cvVersion],
     ["{{NAME}}", escapeHtml(data.name)],
     ["{{LOCATION}}", escapeHtml(data.location)],
+    ["{{SUMMARY_TITLE}}", escapeHtml(data.summaryTitle)],
+    ["{{SKILLS_TITLE}}", escapeHtml(data.skillsTitle)],
+    ["{{EXPERIENCE_TITLE}}", escapeHtml(data.experienceTitle)],
+    ["{{EDUCATION_TITLE}}", escapeHtml(data.educationTitle)],
+    ["{{RECOMMENDATIONS_TITLE}}", escapeHtml(data.recommendationsTitle)],
     ["{{META}}", renderMeta(data.contact)],
     ["{{SUMMARY}}", renderSummary(data.summary)],
     ["{{EXPERIENCE}}", renderJobs(data.jobs)],
     ["{{SKILLS}}", renderSkills(data.skills)],
     ["{{EDUCATION}}", renderEducation(data.education)],
+    ["{{RECOMMENDATIONS}}", renderRecommendations(data.recommendations)],
   ]);
 
   let output = template;
@@ -591,8 +755,9 @@ async function prepareDist() {
 }
 
 async function main() {
-  const [resumeRaw, template] = await Promise.all([
+  const [resumeRaw, recommendationsRaw, template] = await Promise.all([
     fs.readFile(RESUME_PATH, "utf8"),
+    fs.readFile(RECOMMENDATIONS_PATH, "utf8"),
     fs.readFile(TEMPLATE_PATH, "utf8"),
   ]);
 
@@ -600,7 +765,7 @@ async function main() {
   const header = parseHeader(cursor);
   const sections = parseSections(cursor);
 
-  const expectedSections = ["Summary", "Core Skills", "Experience", "Education"];
+  const expectedSections = ["Summary", "Skills", "Experience", "Education"];
   for (const sectionName of expectedSections) {
     if (!sections.has(sectionName)) {
       throw new Error(`resume.md is missing the '${sectionName}' section`);
@@ -612,13 +777,25 @@ async function main() {
     throw new Error(`resume.md contains unsupported sections: ${unknown.join(", ")}`);
   }
 
+  const summarySection = sections.get("Summary");
+  const skillsSection = sections.get("Skills");
+  const experienceSection = sections.get("Experience");
+  const educationSection = sections.get("Education");
+  const recommendations = parseRecommendations(recommendationsRaw);
+
   const data = {
     ...header,
     cvVersion: formatVersion(),
-    summary: parseSummary(sections.get("Summary")),
-    skills: parseSkills(sections.get("Core Skills")),
-    jobs: parseExperience(sections.get("Experience")),
-    education: parseEducation(sections.get("Education")),
+    summaryTitle: summarySection.title,
+    skillsTitle: skillsSection.title,
+    experienceTitle: experienceSection.title,
+    educationTitle: educationSection.title,
+    recommendationsTitle: "Recommendations",
+    summary: parseSummary(summarySection),
+    skills: parseSkills(skillsSection),
+    jobs: parseExperience(experienceSection),
+    education: parseEducation(educationSection),
+    recommendations,
   };
 
   const html = buildHtml(template, data);
@@ -626,11 +803,11 @@ async function main() {
   await removeStaleArtifacts();
   await Promise.all([
     fs.writeFile(INDEX_PATH, html),
-    fs.copyFile(RESUME_PATH, MD_PATH),
+    fs.writeFile(MD_PATH, resumeRaw),
   ]);
 
   const pdfResult = await mdToPdf(
-    { path: RESUME_PATH },
+    { path: MD_PATH },
     { stylesheet: [RESUME_CSS_PATH], dest: PDF_PATH }
   );
 
