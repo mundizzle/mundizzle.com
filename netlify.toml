@@ -1,0 +1,15 @@
+plugins = []
+
+[[redirects]]
+from = "/mundi-morgado-resume.md"
+to = "/resume.md"
+status = 200
+
+[[redirects]]
+from = "/mundi-morgado-resume.pdf"
+to = "/resume.pdf"
+status = 200
+
+[build]
+command = "npm run build"
+publish = "dist"

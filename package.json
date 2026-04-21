@@ -1,0 +1,12 @@
+{
+  "name": "mundizzle-com",
+  "private": true,
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "dev": "npm run build && sh -c 'netlify dev --dir dist --port \"${PORT:-4173}\" --no-open'"
+  },
+  "dependencies": {
+    "marked": "^16.4.1",
+    "md-to-pdf": "^5.2.4"
+  }
+}
