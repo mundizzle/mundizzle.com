@@ -68,8 +68,9 @@ _Apr 2025 – Apr 2026 · 1 yr_
 
 Gierd is a Commerce Intelligence platform for enterprise brands managing multi-marketplace sales, pricing, and financial reconciliation. Series A ($8M).
 
-- Authored agent instructions, rules, and skills adopted by 20 engineers using LLM-assisted development, improving consistency in Rails view code and reducing design system and view-layer PR issues.
-- Co-created the Gierd Design System — 25 reusable components implemented as Rails view helpers — as the canonical UI foundation for the product platform.
+- Contributed to the agent instructions and rules adopted by 20 engineers using LLM-assisted development, improving consistency in Rails view code and reducing design system and view-layer PR issues.
+- Created a shared skills repository for common workflow tasks.
+- Co-created the Gierd Design System, with over 20 reusable components implemented as Rails view helpers, serving as the canonical UI foundation for the product platform.
 - Co-led UI development on a 3-person front-end team, shipping core product capabilities during the company's post-funding growth phase.
 - Built a Figma variable export pipeline for Tailwind-based theming, strengthening consistency and scalability across the Gierd UI.
 
