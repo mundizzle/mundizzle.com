@@ -5,9 +5,10 @@
   "scripts": {
     "dev": "vp dev",
     "check": "vp check",
-    "build": "vp run content && vp build && vp run artifacts",
+    "build": "vp run content && vp build && vp run prerender && vp run artifacts",
     "preview": "vp preview",
     "content": "node scripts/build-content.mjs data",
+    "prerender": "node scripts/prerender.mjs",
     "artifacts": "node scripts/build-content.mjs artifacts",
     "prepare": "vp config"
   },
