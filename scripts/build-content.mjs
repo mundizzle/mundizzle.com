@@ -42,15 +42,6 @@ function renderInlineHtml(markdown) {
   return marked.parseInline(markdown.trim());
 }
 
-function escapeHtml(text) {
-  return text
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#39;");
-}
-
 function isBlank(text) {
   return text.trim() === "";
 }
@@ -660,11 +651,21 @@ function createSiteData(parsed) {
   };
 }
 
+function renderPdfContact(contact) {
+  const pdfContact = contact.filter((entry) => entry.text !== "mundizzle.com");
+  const rows = [pdfContact.slice(0, 2), pdfContact.slice(2)].filter((row) => row.length > 0);
+
+  return rows.map((row, index) => {
+    const suffix = index < rows.length - 1 ? "<br>" : "";
+    return `${row.map((entry) => entry.raw).join(" | ")}${suffix}`;
+  });
+}
+
 function renderPdfMarkdown(data) {
   const lines = [
     `# ${data.name}`,
     "",
-    ...data.contact.map((entry) => `${entry.raw}<br>`),
+    ...renderPdfContact(data.contact),
     "",
     "---",
     "",
@@ -716,32 +717,6 @@ function renderPdfMarkdown(data) {
     lines.push(`**${entry.school}**, ${entry.degree}`);
     lines.push(`*${entry.dates}*`);
     lines.push("");
-  }
-
-  if (data.endorsements.length > 0) {
-    lines.push('<div class="page-break"></div>', "", "## Endorsements", "");
-
-    for (const endorsement of data.endorsements) {
-      const attributionParts = [
-        `<strong>${escapeHtml(endorsement.author)}</strong>`,
-        endorsement.authorTitle ? escapeHtml(endorsement.authorTitle) : null,
-        endorsement.company ? escapeHtml(endorsement.company) : null,
-      ].filter(Boolean);
-
-      let attribution = attributionParts[0];
-      if (attributionParts.length > 1) {
-        attribution += `, ${attributionParts[1]}`;
-      }
-      if (attributionParts.length > 2) {
-        attribution += ` <span class="attribution-sep">//</span> ${attributionParts[2]}`;
-      }
-
-      lines.push('<article class="endorsement">');
-      lines.push(`  <blockquote>${escapeHtml(endorsement.quote)}</blockquote>`);
-      lines.push(`  <p class="endorsement-attribution">${attribution}</p>`);
-      lines.push("</article>");
-      lines.push("");
-    }
   }
 
   return `${lines.join("\n").trimEnd()}\n`;

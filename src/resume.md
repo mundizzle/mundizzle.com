@@ -12,7 +12,7 @@
 
 ## Summary
 
-Front-end architect and engineering leader with 25+ years building products, portals, and design systems across startups, consultancies, and enterprise teams. Deep React, component architecture, accessibility, and performance experience, paired with recent work on agent-assisted development practices that improve UI consistency, review quality, and delivery speed.
+UX Engineer with 25+ years shipping products, platforms, and design systems across startup and enterprise. Deep experience with React, Tailwind, Figma, and Node.js-based tooling. Leads teams, shapes front-end architecture, and improves how engineering work gets done. Driving agentic development practices into team workflows and building UX for an era where agents are users too.
 
 ---
 
@@ -38,20 +38,22 @@ Front-end architect and engineering leader with 25+ years building products, por
 ### Expertise
 
 - front-end architecture
-- design systems and component architecture
-- UX engineering
-- accessibility and performance
-- technical leadership and mentoring
-- technical scoping and stakeholder alignment
+- design systems
+- design tokens
+- accessibility
+- performance
+- technical leadership
+- cross-functional collaboration
+- hiring and mentoring
+- technical scoping
+- pre-sales support
 
 ### Agentic Programming
 
-- agent-assisted development workflows (Claude Code, Codex, Cursor, etc)
-- agent instructions, rules, and skills
-- agent evaluation and review practices
-- model context protocol (MCP)
-- parallel development with git worktrees
-- multi-agent workflows (cmux, Claude Code orchestration)
+- agentic command-line tools (Claude Code, Codex, Cursor)
+- skills authoring
+- parallel development via git worktrees
+- multi-agent team orchestration
 
 ---
 
@@ -65,7 +67,7 @@ _Apr 2025 – Apr 2026 · 1 yr_
 
 Gierd is a Commerce Intelligence platform for enterprise brands managing multi-marketplace sales, pricing, and financial reconciliation. Series A ($8M).
 
-- Introduced agent-assisted development practices for a 20-engineer team, including agent instructions, shared workflow skills, and review standards that improved consistency in Rails view code, design-system adoption, and UI PR quality.
+- Introduced agentic development practices for a 20-engineer team, including agent instructions and review standards that improved consistency in Rails view code, design-system adoption, and UI PR quality.
 - Created a shared skills repository for common engineering workflow tasks, helping the team codify repeatable agent-supported development patterns.
 - Co-created the Gierd Design System, with 20+ reusable components implemented as Rails view helpers and adopted as the canonical UI foundation for the product platform.
 - Co-led UI development on a 3-person front-end team, shipping core product capabilities during the company's post-funding growth phase.
@@ -106,7 +108,7 @@ TandemSeven was a boutique digital consultancy specializing in enterprise UX and
 #### Selected Work
 
 - **Experian BusinessIQ**: Led a team of 20 offshore developers on a 6-month, $3M engagement building out Experian's foundational credit scoring platform.
-- **United Airlines mobile web application**: Part of sales team that won the engagement and led a team of 10 developers on the full app migration from jQuery/jQueryUI to React.
+- **United Airlines mobile web application**: Part of the sales team that won the engagement and led a team of 10 developers on the full app migration from jQuery/jQueryUI to React.
 
 #### Selected Clients
 
@@ -136,7 +138,7 @@ SupplySolution
 
 _2001 – 2002 · 1 yr_
 
-i-Supply, a real-time direct material fulfillment application integrating supplier/manufacturer/distributor ERP systems. Based on Python and Qt widget toolkit.
+i-Supply, a real-time direct material fulfillment application integrating supplier/manufacturer/distributor ERP systems. Built with Python and the Qt widget toolkit.
 
 ### Senior Technical Designer
 
@@ -144,7 +146,7 @@ ZEFER
 
 _1998 – 2001 · 3 yrs_
 
-Pioneering dot-com era internet strategy and development consultancy. Arranged $100 million in financing from GTCR Golder Rauner LLC.
+Pioneering dot-com era internet strategy and development consultancy.
 
 ---
 
